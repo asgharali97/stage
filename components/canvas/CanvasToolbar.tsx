@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CloudArrowUp, TextT, PaintBrush, Download, ImageSquare as ImageIcon, X } from "@phosphor-icons/react";
+import { CloudArrowUp, TextT, PaintBrush, Download, ImageSquare as ImageIcon, X, Plus } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCanvas } from "@/hooks/useCanvas";
@@ -457,7 +457,7 @@ export function CanvasToolbar() {
               </div>
             )}
 
-            <Button onClick={handleAddText} className="w-full" disabled={!text.trim()}>
+            <Button onClick={() => handleAddText()} className="w-full" disabled={!text.trim()}>
               Add Text
             </Button>
           </div>

@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 import { signInWithGoogle } from "@/lib/auth-helpers";
 import { GoogleIcon } from "@/components/auth/GoogleIcon";
+import { SIGN_IN_BACKGROUND_PUBLIC_ID } from "@/lib/cloudinary-backgrounds";
 
 export default function SignInPage() {
   const handleGoogleSignIn = async () => {
@@ -18,12 +20,15 @@ export default function SignInPage() {
     <div className="min-h-screen flex bg-gray-50">
       {/* Left Column - Image Background */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gray-100">
-        <Image
-          src="/backgrounds/mac-asset-7.png"
+        <OptimizedImage
+          src={SIGN_IN_BACKGROUND_PUBLIC_ID}
           alt="Design workspace"
           fill
           className="object-cover"
           priority
+          quality="auto"
+          crop="fill"
+          gravity="auto"
         />
         
         {/* Dark overlay for text readability */}

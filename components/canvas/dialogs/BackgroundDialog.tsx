@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { useDropzone } from "react-dropzone";
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/lib/constants";
 import { useCanvasContext } from "../CanvasContext";
+import { getCldImageUrl } from "@/lib/cloudinary";
+import { cloudinaryPublicIds } from "@/lib/cloudinary-backgrounds";
 import Konva from "konva";
 
 interface BackgroundDialogProps {
@@ -24,18 +26,8 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string | null>(null);
   const [bgUploadError, setBgUploadError] = useState<string | null>(null);
 
-  const staticBackgrounds: string[] = [
-    "/backgrounds/mac-asset-1.jpeg",
-    "/backgrounds/mac-assest-2.jpg",
-    "/backgrounds/mac-asset-3.jpg",
-    "/backgrounds/mac-asset-4.jpg",
-    "/backgrounds/mac-asset-5.jpg",
-    "/backgrounds/mac-asset-6.jpeg",
-    "/backgrounds/mac-asset-7.png",
-    "/backgrounds/mac-asset-8.jpg",
-    "/backgrounds/mac-asset-9.jpg",
-    "/backgrounds/mac-asset-10.jpg",
-  ];
+  // Use Cloudinary public IDs only
+  const staticBackgrounds: string[] = cloudinaryPublicIds;
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
@@ -98,6 +90,17 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
   const updateCanvasBackgroundImage = async (imageUrl: string) => {
     if (layer && stage) {
       try {
+        // imageUrl is always a Cloudinary public ID
+        const optimizedUrl = getCldImageUrl({
+          src: imageUrl,
+          width: stage.width(),
+          height: stage.height(),
+          quality: 'auto',
+          format: 'auto',
+          crop: 'fill',
+          gravity: 'auto',
+        });
+        
         const img = await new Promise<HTMLImageElement>((resolve, reject) => {
           const image = new Image();
           image.crossOrigin = "anonymous";
@@ -115,7 +118,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
             reject(err);
           };
           
-          image.src = imageUrl;
+          image.src = optimizedUrl;
         });
 
         const bgRect = layer.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
@@ -394,22 +397,35 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-gray-700">Preset Backgrounds</label>
                   <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto p-1">
-                    {staticBackgrounds.map((bgPath, idx) => (
-                      <button
-                        key={idx}
-                        className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 hover:border-2 transition-all group"
-                        onClick={() => updateCanvasBackgroundImage(bgPath)}
-                        title={`Use background ${idx + 1}`}
-                      >
-                        <img
-                          src={bgPath}
-                          alt={`Background ${idx + 1}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                      </button>
-                    ))}
+                    {staticBackgrounds.map((publicId, idx) => {
+                      // bgPath is always a Cloudinary public ID
+                      const thumbnailUrl = getCldImageUrl({
+                        src: publicId,
+                        width: 300,
+                        height: 200,
+                        quality: 'auto',
+                        format: 'auto',
+                        crop: 'fill',
+                        gravity: 'auto',
+                      });
+                      
+                      return (
+                        <button
+                          key={idx}
+                          className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 hover:border-2 transition-all group"
+                          onClick={() => updateCanvasBackgroundImage(publicId)}
+                          title={`Use background ${idx + 1}`}
+                        >
+                          <img
+                            src={thumbnailUrl}
+                            alt={`Background ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}

@@ -27,6 +27,9 @@ Stage is a canvas editor that runs in your web browser. Think of it like a simpl
 3. **Open your browser:**
    Visit [http://localhost:3000](http://localhost:3000)
 
+4. **Optional - Set up Cloudinary for image optimization:**
+   See [CLOUDINARY_SETUP.md](CLOUDINARY_SETUP.md) for instructions on configuring Cloudinary to optimize all images automatically.
+
 ## How to Use
 
 ### Main Pages
@@ -47,6 +50,7 @@ Stage is a canvas editor that runs in your web browser. Think of it like a simpl
 - **Konva** - Canvas rendering engine
 - **Tailwind CSS** - Styling
 - **TypeScript** - Type safety
+- **Cloudinary** - Image optimization and CDN (optional)
 
 ## Project Structure
 

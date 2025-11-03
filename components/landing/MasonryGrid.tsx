@@ -1,25 +1,18 @@
 "use client";
 
-import Image from "next/image";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { cloudinaryPublicIds } from "@/lib/cloudinary-backgrounds";
 
 interface MasonryItem {
   id: number;
   image: string;
 }
 
-// Multiple images from public assets - all same size
-const sampleItems: MasonryItem[] = [
-  { id: 1, image: "/backgrounds/mac-asset-1.jpeg" },
-  { id: 2, image: "/backgrounds/mac-assest-2.jpg" },
-  { id: 3, image: "/backgrounds/mac-asset-3.jpg" },
-  { id: 4, image: "/backgrounds/mac-asset-4.jpg" },
-  { id: 5, image: "/backgrounds/mac-asset-5.jpg" },
-  { id: 6, image: "/backgrounds/mac-asset-6.jpeg" },
-  { id: 7, image: "/backgrounds/mac-asset-7.png" },
-  { id: 8, image: "/backgrounds/mac-asset-8.jpg" },
-  { id: 9, image: "/backgrounds/mac-asset-9.jpg" },
-  { id: 10, image: "/backgrounds/mac-asset-10.jpg" },
-];
+// Use Cloudinary public IDs only
+const sampleItems: MasonryItem[] = cloudinaryPublicIds.map((publicId, index) => ({
+  id: index + 1,
+  image: publicId,
+}));
 
 export function MasonryGrid() {
   return (
@@ -31,12 +24,15 @@ export function MasonryGrid() {
               key={item.id}
               className="relative bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-border group aspect-video"
             >
-              <Image
+              <OptimizedImage
                 src={item.image}
                 alt={`Gallery image ${item.id}`}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                quality="auto"
+                crop="fill"
+                gravity="auto"
               />
             </div>
           ))}

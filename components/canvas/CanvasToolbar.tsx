@@ -40,13 +40,13 @@ export function CanvasToolbar() {
 
   return (
     <>
-      <div className="w-full flex justify-center z-50 py-4">
-        <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-gray-200/80 px-3 py-2 flex items-center gap-1">
+      <div className="w-full flex justify-center z-50 py-2 md:py-4">
+        <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-gray-200/80 px-2 py-1.5 md:px-3 md:py-2 flex items-center gap-0.5 md:gap-1 overflow-x-auto max-w-full">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setUploadDialogOpen(true)}
-          className="h-9 w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95"
+          className="h-10 w-10 md:h-9 md:w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95 touch-manipulation"
           aria-label="Upload Image"
           title="Upload Image"
         >
@@ -57,7 +57,7 @@ export function CanvasToolbar() {
           variant="ghost"
           size="icon"
           onClick={() => setTextDialogOpen(true)}
-          className="h-9 w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95"
+          className="h-10 w-10 md:h-9 md:w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95 touch-manipulation"
           aria-label="Add Text"
           title="Add Text"
         >
@@ -68,7 +68,7 @@ export function CanvasToolbar() {
           variant="ghost"
           size="icon"
           onClick={() => setColorDialogOpen(true)}
-          className="h-9 w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95"
+          className="h-10 w-10 md:h-9 md:w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95 touch-manipulation"
           aria-label="Change Background"
           title="Change Background"
         >
@@ -79,20 +79,20 @@ export function CanvasToolbar() {
           variant="ghost"
           size="icon"
           onClick={() => setAspectRatioDialogOpen(true)}
-          className="h-9 w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95"
+          className="h-10 w-10 md:h-9 md:w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95 touch-manipulation"
           aria-label="Canvas Size"
           title="Canvas Size"
         >
           <ArrowsOut size={18} weight="regular" className="text-gray-700" />
         </Button>
 
-        <div className="w-px h-6 bg-gray-200 mx-1.5" />
+        <div className="w-px h-6 bg-gray-200 mx-1 md:mx-1.5" />
 
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setExportDialogOpen(true)}
-          className="h-9 w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95"
+          className="h-10 w-10 md:h-9 md:w-9 rounded-lg hover:bg-gray-100/80 hover:scale-105 active:scale-95 touch-manipulation"
           aria-label="Export Canvas"
           title="Export Canvas"
         >

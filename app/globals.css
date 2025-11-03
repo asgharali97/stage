@@ -119,4 +119,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Improve touch targets on mobile */
+  button, a, [role="button"] {
+    @apply touch-manipulation;
+  }
+  /* Prevent text selection on mobile interactions */
+  input, textarea {
+    @apply text-base;
+  }
 }

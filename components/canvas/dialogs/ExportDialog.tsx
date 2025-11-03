@@ -40,25 +40,25 @@ export function ExportDialog({ open, onOpenChange, onExport }: ExportDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gray-900">Export Canvas</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900">Export Canvas</DialogTitle>
         </DialogHeader>
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Format</label>
             <div className="flex gap-2">
               <Button
                 variant={exportFormat === "png" ? "default" : "outline"}
                 onClick={() => setExportFormat("png")}
-                className={`flex-1 ${exportFormat === "png" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                className={`flex-1 h-11 touch-manipulation ${exportFormat === "png" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
               >
                 PNG
               </Button>
               <Button
                 variant={exportFormat === "jpg" ? "default" : "outline"}
                 onClick={() => setExportFormat("jpg")}
-                className={`flex-1 ${exportFormat === "jpg" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                className={`flex-1 h-11 touch-manipulation ${exportFormat === "jpg" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
               >
                 JPG
               </Button>

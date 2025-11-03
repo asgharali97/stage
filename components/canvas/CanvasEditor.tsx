@@ -36,8 +36,9 @@ export function CanvasEditor({
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
         
-        // Calculate padding (4 * 16px = 64px total padding from parent)
-        const padding = 64;
+        // Calculate padding responsively based on screen size
+        const isMobile = window.innerWidth < 640; // sm breakpoint
+        const padding = isMobile ? 32 : window.innerWidth < 1024 ? 48 : 64;
         const availableWidth = containerWidth - padding;
         const availableHeight = containerHeight - padding;
         
@@ -157,10 +158,18 @@ export function CanvasEditor({
           height={height}
           onClick={handleStageClick}
           onTap={handleStageClick}
+          onTouchStart={(e) => {
+            // Prevent default touch behaviors that interfere with canvas
+            const touch = e.evt.touches[0];
+            if (touch) {
+              e.evt.preventDefault();
+            }
+          }}
           style={{ 
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
             backgroundColor: backgroundColor,
+            touchAction: 'none', // Prevent default touch gestures
           }}
         >
         <Layer ref={layerRef}>

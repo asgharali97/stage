@@ -57,32 +57,32 @@ export function UploadDialog({ open, onOpenChange, onUpload }: UploadDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gray-900">Upload Image</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900">Upload Image</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-xl p-10 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center ${
+            className={`border-2 border-dashed rounded-xl p-6 sm:p-10 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center touch-manipulation ${
               isDragActive
                 ? "border-blue-500 bg-blue-50/50 scale-[1.02]"
                 : "border-gray-200 hover:border-blue-400 hover:bg-gray-50/50"
             }`}
           >
             <input {...getInputProps()} />
-            <div className={`mb-4 transition-colors flex items-center justify-center w-full ${isDragActive ? "text-blue-500" : "text-gray-400"}`}>
-              <ImageIcon size={56} weight="duotone" />
+            <div className={`mb-3 sm:mb-4 transition-colors flex items-center justify-center w-full ${isDragActive ? "text-blue-500" : "text-gray-400"}`}>
+              <ImageIcon size={48} weight="duotone" className="sm:w-14 sm:h-14" />
             </div>
             {isDragActive ? (
               <p className="text-sm font-medium text-blue-600 text-center">Drop the image here...</p>
             ) : (
-              <div className="space-y-2 text-center">
+              <div className="space-y-2 text-center px-2">
                 <p className="text-sm font-semibold text-gray-700">
                   Drag & drop an image here
                 </p>
                 <p className="text-xs text-gray-500">
-                  or click to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB
+                  or tap to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB
                 </p>
               </div>
               )}

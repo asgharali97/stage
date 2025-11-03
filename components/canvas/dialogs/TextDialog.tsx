@@ -40,11 +40,11 @@ export function TextDialog({ open, onOpenChange, onAddText }: TextDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gray-900">Add Text</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900">Add Text</DialogTitle>
         </DialogHeader>
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Text</label>
             <Input
@@ -57,18 +57,18 @@ export function TextDialog({ open, onOpenChange, onAddText }: TextDialogProps) {
                   handleAddText();
                 }
               }}
-              className="h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400"
+              className="h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400 text-base"
             />
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <label className="text-sm font-semibold text-gray-700">Font Size</label>
               <Input
                 type="number"
                 value={fontSize}
                 onChange={(e) => setFontSize(Number(e.target.value))}
-                className="w-24 h-9 border-gray-200 focus:border-blue-400 focus:ring-blue-400"
+                className="w-20 sm:w-24 h-9 border-gray-200 focus:border-blue-400 focus:ring-blue-400 text-base"
                 min={12}
                 max={200}
               />
@@ -85,18 +85,18 @@ export function TextDialog({ open, onOpenChange, onAddText }: TextDialogProps) {
 
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Color</label>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Input
                 type="color"
                 value={textColor}
                 onChange={(e) => setTextColor(e.target.value)}
-                className="w-16 h-16 rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors touch-manipulation"
               />
               <Input
                 type="text"
                 value={textColor}
                 onChange={(e) => setTextColor(e.target.value)}
-                className="flex-1 h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400 font-mono"
+                className="flex-1 h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400 font-mono text-base"
                 placeholder="#000000"
               />
             </div>

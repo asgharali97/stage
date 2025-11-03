@@ -10,12 +10,12 @@ interface FeaturesProps {
 
 export function Features({ features, title }: FeaturesProps) {
   return (
-    <section className="w-full py-16 px-6 border-t border-border">
+    <section className="w-full py-12 sm:py-16 px-4 sm:px-6 border-t border-border">
       <div className="container mx-auto max-w-6xl">
         {title && (
-          <h2 className="text-3xl font-bold text-center mb-12">{title}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">{title}</h2>
         )}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <div key={index} className="space-y-2">
               <h3 className="font-semibold text-lg">{feature.title}</h3>

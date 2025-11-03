@@ -172,11 +172,11 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gray-900">Background Settings</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900">Background Settings</DialogTitle>
         </DialogHeader>
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           {/* Background Type Tabs */}
-          <div className="flex gap-1.5 p-1 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="flex gap-1 sm:gap-1.5 p-1 bg-gray-50 rounded-lg border border-gray-200">
             <button
               onClick={() => setBackgroundType("solid")}
               className={`flex-1 px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 ${
@@ -211,10 +211,10 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
 
           {/* Solid Color */}
           {backgroundType === "solid" && (
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Select Color</label>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Input
                     type="color"
                     value={backgroundColor}
@@ -223,13 +223,13 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                       setBackgroundColor(color);
                       updateCanvasBackground(color);
                     }}
-                    className="w-20 h-20 rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-400 transition-colors touch-manipulation"
                   />
                   <Input
                     type="text"
                     value={backgroundColor}
                     placeholder="#ffffff"
-                    className="flex-1 h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400 font-mono"
+                    className="flex-1 h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400 font-mono text-base"
                     onChange={(e) => {
                       const color = e.target.value;
                       setBackgroundColor(color);
@@ -244,7 +244,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
               {/* Preset Colors */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Preset Colors</label>
-                <div className="grid grid-cols-8 gap-2">
+                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
                   {[
                     "#ffffff", "#000000", "#f3f4f6", "#ef4444",
                     "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6",
@@ -252,7 +252,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                   ].map((color) => (
                     <button
                       key={color}
-                      className="w-10 h-10 rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:scale-110 transition-all duration-200 shadow-sm hover:shadow-md"
+                      className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:scale-110 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
                       style={{ backgroundColor: color }}
                       onClick={() => {
                         setBackgroundColor(color);
@@ -268,7 +268,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
 
           {/* Gradient */}
           {backgroundType === "gradient" && (
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Gradient Type</label>
                 <div className="flex gap-2">
@@ -278,7 +278,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                       setGradientType("linear");
                       updateCanvasGradient(gradientColors, "linear");
                     }}
-                    className={`flex-1 ${gradientType === "linear" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                    className={`flex-1 h-11 touch-manipulation ${gradientType === "linear" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
                   >
                     Linear
                   </Button>
@@ -288,7 +288,7 @@ export function BackgroundDialog({ open, onOpenChange }: BackgroundDialogProps) 
                       setGradientType("radial");
                       updateCanvasGradient(gradientColors, "radial");
                     }}
-                    className={`flex-1 ${gradientType === "radial" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                    className={`flex-1 h-11 touch-manipulation ${gradientType === "radial" ? "bg-blue-600 hover:bg-blue-700" : ""}`}
                   >
                     Radial
                   </Button>

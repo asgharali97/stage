@@ -17,20 +17,20 @@ export function AspectRatioDialog({ open, onOpenChange }: AspectRatioDialogProps
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto p-0">
-        <div className="p-6 pb-4 border-b border-gray-100">
+        <div className="p-4 sm:p-6 pb-4 border-b border-gray-100">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-gray-900">
+            <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900">
               Canvas Size & Aspect Ratio
             </DialogTitle>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-xs sm:text-sm text-gray-500 mt-2">
               Choose a preset or set custom dimensions for your canvas
             </p>
           </DialogHeader>
         </div>
         
-        <div className="p-6 pt-4">
+        <div className="p-4 sm:p-6 pt-4">
           <Tabs defaultValue="presets" className="w-full">
-            <TabsList className="flex gap-1.5 p-1 bg-gray-50 rounded-lg border border-gray-200 mb-6 h-auto w-full">
+            <TabsList className="flex gap-1 sm:gap-1.5 p-1 bg-gray-50 rounded-lg border border-gray-200 mb-4 sm:mb-6 h-auto w-full">
               <TabsTrigger 
                 value="presets"
                 className="flex-1 px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-blue-200 data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-white/50 data-[state=inactive]:bg-transparent h-auto"
@@ -45,11 +45,11 @@ export function AspectRatioDialog({ open, onOpenChange }: AspectRatioDialogProps
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="presets" className="space-y-5">
+            <TabsContent value="presets" className="space-y-4 sm:space-y-5">
               {/* Instagram Category */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Instagram</label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {ASPECT_RATIO_PRESETS.filter(p => p.category === "Instagram").map((preset) => (
                     <button
                       key={preset.id}
@@ -100,7 +100,7 @@ export function AspectRatioDialog({ open, onOpenChange }: AspectRatioDialogProps
               {/* Other Social Media */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Social Media</label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {ASPECT_RATIO_PRESETS.filter(p => ["Facebook", "Twitter", "YouTube"].includes(p.category)).map((preset) => (
                     <button
                       key={preset.id}
@@ -151,7 +151,7 @@ export function AspectRatioDialog({ open, onOpenChange }: AspectRatioDialogProps
               {/* Standard Formats */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700">Standard Formats</label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {ASPECT_RATIO_PRESETS.filter(p => p.category === "Standard").map((preset) => (
                     <button
                       key={preset.id}
@@ -200,10 +200,10 @@ export function AspectRatioDialog({ open, onOpenChange }: AspectRatioDialogProps
               </div>
             </TabsContent>
 
-            <TabsContent value="custom" className="space-y-6">
-              <div className="space-y-6">
+            <TabsContent value="custom" className="space-y-4 sm:space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Input Fields */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-700">
                       Width

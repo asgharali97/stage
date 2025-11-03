@@ -1,3 +1,7 @@
+"use client";
+
+import { GithubLogo } from "@phosphor-icons/react";
+
 interface FooterProps {
   brandName?: string;
   additionalText?: string;
@@ -9,10 +13,22 @@ export function Footer({
 }: FooterProps) {
   return (
     <footer className="w-full border-t border-border py-4 sm:py-6 shrink-0">
-      <div className="container mx-auto px-4 sm:px-6 text-center text-xs sm:text-sm text-muted-foreground">
-        <p>
-          © {new Date().getFullYear()} {brandName}. {additionalText}
-        </p>
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            © {new Date().getFullYear()} {brandName}. {additionalText}
+          </p>
+          <a
+            href="https://github.com/KartikLabhshetwar/stage"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="GitHub repository"
+          >
+            <GithubLogo className="h-4 w-4" />
+            <span>View on GitHub</span>
+          </a>
+        </div>
       </div>
     </footer>
   );

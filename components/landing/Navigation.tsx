@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-client";
 import { signOutUser } from "@/lib/auth-helpers";
+import { GithubLogo } from "@phosphor-icons/react";
 
 interface NavigationProps {
   ctaLabel?: string;
@@ -65,6 +66,15 @@ export function Navigation({
           />
         </Link>
         <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/KartikLabhshetwar/stage"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="GitHub repository"
+          >
+            <GithubLogo className="h-5 w-5 text-gray-700 hover:text-gray-900" />
+          </a>
           {session?.user ? (
             <>
               <DropdownMenu>

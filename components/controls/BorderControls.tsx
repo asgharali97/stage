@@ -4,6 +4,8 @@ import * as React from 'react';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 import { ImageBorder } from '@/lib/store';
 import { BorderStyleSelector } from './BorderStyleSelector';
 
@@ -124,13 +126,15 @@ export function BorderControls({ border, onBorderChange }: BorderControlsProps) 
                       className="w-12 h-10 rounded-lg border border-gray-300 cursor-pointer hover:border-gray-400 transition-colors shadow-sm"
                       title="Pick border color"
                     />
-                    <input
-                      type="text"
-                      value={border.color}
-                      onChange={(e) => onBorderChange({ color: e.target.value })}
-                      placeholder="#000000"
-                      className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-white"
-                    />
+                    <GlassInputWrapper className="flex-1">
+                      <Input
+                        type="text"
+                        value={border.color}
+                        onChange={(e) => onBorderChange({ color: e.target.value })}
+                        placeholder="#000000"
+                        className="border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                      />
+                    </GlassInputWrapper>
                   </div>
                 </div>
 

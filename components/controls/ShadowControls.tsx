@@ -4,6 +4,8 @@ import * as React from 'react';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 import { ImageShadow } from '@/lib/store';
 
 interface ShadowControlsProps {
@@ -156,36 +158,40 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                   className="w-12 h-10 rounded-lg border border-border cursor-pointer"
                 />
                 <div className="flex-1 flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={shadow.color}
-                    onChange={(e) => onShadowChange({ color: e.target.value })}
-                    placeholder="rgba(0, 0, 0, 0.3)"
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 bg-white"
-                  />
+                  <GlassInputWrapper className="flex-1">
+                    <Input
+                      type="text"
+                      value={shadow.color}
+                      onChange={(e) => onShadowChange({ color: e.target.value })}
+                      placeholder="rgba(0, 0, 0, 0.3)"
+                      className="border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                    />
+                  </GlassInputWrapper>
                   <div className="text-xs text-gray-500 whitespace-nowrap">Opacity</div>
-                  <input
-                    type="number"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={(() => {
-                      const alphaMatch = shadow.color.match(/rgba\([^)]+,\s*([\d.]+)\)/);
-                      return alphaMatch ? alphaMatch[1] : '0.3';
-                    })()}
-                    onChange={(e) => {
-                      const alpha = parseFloat(e.target.value) || 0.3;
-                      const rgbMatch = shadow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-                      if (rgbMatch) {
-                        onShadowChange({
-                          color: `rgba(${rgbMatch[1]}, ${rgbMatch[2]}, ${rgbMatch[3]}, ${alpha})`,
-                        });
-                      } else {
-                        onShadowChange({ color: `rgba(0, 0, 0, ${alpha})` });
-                      }
-                    }}
-                    className="w-16 px-2 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 bg-white"
-                  />
+                  <GlassInputWrapper className="w-16">
+                    <Input
+                      type="number"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={(() => {
+                        const alphaMatch = shadow.color.match(/rgba\([^)]+,\s*([\d.]+)\)/);
+                        return alphaMatch ? alphaMatch[1] : '0.3';
+                      })()}
+                      onChange={(e) => {
+                        const alpha = parseFloat(e.target.value) || 0.3;
+                        const rgbMatch = shadow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                        if (rgbMatch) {
+                          onShadowChange({
+                            color: `rgba(${rgbMatch[1]}, ${rgbMatch[2]}, ${rgbMatch[3]}, ${alpha})`,
+                          });
+                        } else {
+                          onShadowChange({ color: `rgba(0, 0, 0, ${alpha})` });
+                        }
+                      }}
+                      className="border-0 bg-transparent text-sm px-2 py-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    />
+                  </GlassInputWrapper>
                 </div>
               </div>
             </div>

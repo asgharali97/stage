@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 import { useImageStore } from '@/lib/store';
 import { Plus, Trash2, Eye, EyeOff } from 'lucide-react';
 import { fontFamilies, getAvailableFontWeights } from '@/lib/constants/fonts';
@@ -168,13 +169,15 @@ export const TextOverlayControls = () => {
 
       <div className="space-y-3">
         <div className="flex gap-2">
-          <Input
-            placeholder="Enter text..."
-            value={newText}
-            onChange={(e) => setNewText(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAddText()}
-            className="flex-1 text-sm"
-          />
+          <GlassInputWrapper className="flex-1">
+            <Input
+              placeholder="Enter text..."
+              value={newText}
+              onChange={(e) => setNewText(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddText()}
+              className="border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+            />
+          </GlassInputWrapper>
           <Button size="sm" onClick={handleAddText} disabled={!newText.trim()} className="h-9">
             <Plus className="h-4 w-4" />
           </Button>
@@ -240,11 +243,14 @@ export const TextOverlayControls = () => {
               {`Edit: "${selectedOverlay.text}"`}
             </p>
 
-            <Input
-              placeholder="Edit text..."
-              value={selectedOverlay.text}
-              onChange={(e) => handleUpdateText(e.target.value)}
-            />
+            <GlassInputWrapper>
+              <Input
+                placeholder="Edit text..."
+                value={selectedOverlay.text}
+                onChange={(e) => handleUpdateText(e.target.value)}
+                className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </GlassInputWrapper>
 
             <div className="flex gap-2">
               <Input
@@ -253,12 +259,14 @@ export const TextOverlayControls = () => {
                 onChange={(e) => handleUpdateColor(e.target.value)}
                 className="w-12 h-8 p-1"
               />
-              <Input
-                placeholder="#ffffff"
-                value={selectedOverlay.color}
-                onChange={(e) => handleUpdateColor(e.target.value)}
-                className="flex-1"
-              />
+              <GlassInputWrapper className="flex-1">
+                <Input
+                  placeholder="#ffffff"
+                  value={selectedOverlay.color}
+                  onChange={(e) => handleUpdateColor(e.target.value)}
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </GlassInputWrapper>
             </div>
 
             <Select
@@ -401,14 +409,16 @@ export const TextOverlayControls = () => {
                       }
                       className="w-12 h-8 p-1"
                     />
-                    <Input
-                      placeholder="rgba(0, 0, 0, 0.5)"
-                      value={selectedOverlay.textShadow.color}
-                      onChange={(e) =>
-                        handleUpdateTextShadow({ color: e.target.value })
-                      }
-                      className="flex-1"
-                    />
+                    <GlassInputWrapper className="flex-1">
+                      <Input
+                        placeholder="rgba(0, 0, 0, 0.5)"
+                        value={selectedOverlay.textShadow.color}
+                        onChange={(e) =>
+                          handleUpdateTextShadow({ color: e.target.value })
+                        }
+                        className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                      />
+                    </GlassInputWrapper>
                   </div>
 
                   {/* Shadow Blur */}

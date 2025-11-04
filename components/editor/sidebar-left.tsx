@@ -15,6 +15,7 @@ import { Download, Trash2, Save } from 'lucide-react';
 import { getAspectRatioPreset } from '@/lib/aspect-ratio-utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { GlassInputWrapper } from '@/components/ui/glass-input-wrapper';
 import { useRouter } from 'next/navigation';
 import { useExport } from '@/hooks/useExport';
 
@@ -173,30 +174,38 @@ export function SidebarLeft({
               <label htmlFor="design-name" className="text-sm font-medium mb-2 block">
                 Design Name *
               </label>
-              <Input
-                id="design-name"
-                value={saveName}
-                onChange={(e) => setSaveName(e.target.value)}
-                placeholder="My Awesome Design"
-                disabled={isSaving}
-              />
+              <GlassInputWrapper intensity="default">
+                <Input
+                  id="design-name"
+                  value={saveName}
+                  onChange={(e) => setSaveName(e.target.value)}
+                  placeholder="My Awesome Design"
+                  disabled={isSaving}
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </GlassInputWrapper>
             </div>
             <div>
               <label htmlFor="design-description" className="text-sm font-medium mb-2 block">
                 Description (optional)
               </label>
-              <Input
-                id="design-description"
-                value={saveDescription}
-                onChange={(e) => setSaveDescription(e.target.value)}
-                placeholder="A brief description of your design"
-                disabled={isSaving}
-              />
+              <GlassInputWrapper intensity="default">
+                <Input
+                  id="design-description"
+                  value={saveDescription}
+                  onChange={(e) => setSaveDescription(e.target.value)}
+                  placeholder="A brief description of your design"
+                  disabled={isSaving}
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </GlassInputWrapper>
             </div>
             {saveError && (
-              <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                {saveError}
-              </div>
+              <GlassInputWrapper intensity="strong" className="border-red-200 dark:border-red-800/50">
+                <div className="text-sm text-red-600 dark:text-red-400 p-2 rounded">
+                  {saveError}
+                </div>
+              </GlassInputWrapper>
             )}
           </div>
           <DialogFooter>

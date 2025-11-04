@@ -13,6 +13,7 @@ import { StyleTabs } from './style-tabs';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { getAspectRatioPreset } from '@/lib/aspect-ratio-utils';
+import { cn } from '@/lib/utils';
 
 export function SidebarLeft({
   ...props
@@ -315,24 +316,23 @@ export function SidebarLeft({
 
   return (
     <>
-      <Sidebar className="bg-gradient-to-b from-blue-50 to-white border-r border-blue-100 shadow-sm" {...props}>
-        <SidebarHeader className="p-4 pb-3 border-b border-blue-100 bg-white">
-          <div className="space-y-3">
-            <Button
-              onClick={() => setExportDialogOpen(true)}
-              disabled={!uploadedImageUrl}
-              className={`w-full h-10 rounded-lg font-medium transition-all ${
-                uploadedImageUrl
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              <Download className="size-4 mr-2" />
-              Export Image
-            </Button>
-          </div>
+      <Sidebar className="border-r border-border bg-background" {...props}>
+        <SidebarHeader className="p-6 border-b border-border">
+          <Button
+            onClick={() => setExportDialogOpen(true)}
+            disabled={!uploadedImageUrl}
+            className={cn(
+              "w-full h-11 font-medium transition-all",
+              uploadedImageUrl
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                : "bg-muted text-muted-foreground cursor-not-allowed"
+            )}
+          >
+            <Download className="size-4 mr-2" />
+            Export Image
+          </Button>
         </SidebarHeader>
-        <SidebarContent className="px-4 py-4 space-y-6 bg-white">
+        <SidebarContent className="px-4 py-6 space-y-6">
           <StyleTabs />
         </SidebarContent>
         <SidebarRail />

@@ -16,6 +16,8 @@ import { useDropzone } from 'react-dropzone';
 import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from '@/lib/constants';
 import { ImageSquare as ImageIcon, Crop, PaintBrush, TextT } from '@phosphor-icons/react';
 import { aspectRatios } from '@/lib/constants/aspect-ratios';
+import { BorderControls } from '@/components/controls/BorderControls';
+import { ShadowControls } from '@/components/controls/ShadowControls';
 
 export function StyleTabs() {
   const {
@@ -25,6 +27,8 @@ export function StyleTabs() {
     imageOpacity,
     imageScale,
     selectedAspectRatio,
+    imageBorder,
+    imageShadow,
     setBackgroundType,
     setBackgroundValue,
     setBackgroundOpacity,
@@ -33,6 +37,8 @@ export function StyleTabs() {
     setBackgroundBorderRadius,
     setImageOpacity,
     setImageScale,
+    setImageBorder,
+    setImageShadow,
   } = useImageStore();
 
   const [bgUploadError, setBgUploadError] = React.useState<string | null>(null);
@@ -451,6 +457,10 @@ export function StyleTabs() {
               step={1}
             />
           </div>
+
+          <BorderControls border={imageBorder} onBorderChange={setImageBorder} />
+
+          <ShadowControls shadow={imageShadow} onShadowChange={setImageShadow} />
 
           <div className="space-y-3">
             <div className="flex justify-between items-center">

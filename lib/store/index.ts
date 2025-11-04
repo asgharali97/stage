@@ -28,6 +28,22 @@ export interface TextOverlay {
   textShadow: TextShadow;
 }
 
+export interface ImageBorder {
+  enabled: boolean;
+  width: number;
+  color: string;
+  style: 'solid' | 'dashed' | 'dotted' | 'double';
+}
+
+export interface ImageShadow {
+  enabled: boolean;
+  blur: number;
+  offsetX: number;
+  offsetY: number;
+  spread: number;
+  color: string;
+}
+
 interface ImageState {
   uploadedImageUrl: string | null;
   imageName: string | null;
@@ -39,6 +55,8 @@ interface ImageState {
   textOverlays: TextOverlay[];
   imageOpacity: number;
   imageScale: number;
+  imageBorder: ImageBorder;
+  imageShadow: ImageShadow;
   setImage: (file: File) => void;
   clearImage: () => void;
   setGradient: (gradient: GradientKey) => void;
@@ -56,6 +74,8 @@ interface ImageState {
   clearTextOverlays: () => void;
   setImageOpacity: (opacity: number) => void;
   setImageScale: (scale: number) => void;
+  setImageBorder: (border: ImageBorder | Partial<ImageBorder>) => void;
+  setImageShadow: (shadow: ImageShadow | Partial<ImageShadow>) => void;
   exportImage: () => Promise<void>;
 }
 
@@ -74,7 +94,21 @@ export const useImageStore = create<ImageState>((set, get) => ({
   },
   textOverlays: [],
   imageOpacity: 1,
-  imageScale: 100, // Percentage scale, default 100%
+  imageScale: 100,
+  imageBorder: {
+    enabled: false,
+    width: 2,
+    color: '#000000',
+    style: 'solid',
+  },
+  imageShadow: {
+    enabled: false,
+    blur: 10,
+    offsetX: 0,
+    offsetY: 4,
+    spread: 0,
+    color: 'rgba(0, 0, 0, 0.3)',
+  },
 
   setImage: (file: File) => {
     const imageUrl = URL.createObjectURL(file);
@@ -186,6 +220,26 @@ export const useImageStore = create<ImageState>((set, get) => ({
 
   setImageScale: (scale: number) => {
     set({ imageScale: scale });
+  },
+
+  setImageBorder: (border: ImageBorder | Partial<ImageBorder>) => {
+    const currentBorder = get().imageBorder;
+    set({
+      imageBorder: {
+        ...currentBorder,
+        ...border,
+      },
+    });
+  },
+
+  setImageShadow: (shadow: ImageShadow | Partial<ImageShadow>) => {
+    const currentShadow = get().imageShadow;
+    set({
+      imageShadow: {
+        ...currentShadow,
+        ...shadow,
+      },
+    });
   },
 
   exportImage: async () => {

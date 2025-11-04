@@ -32,7 +32,7 @@ export interface ImageBorder {
   enabled: boolean;
   width: number;
   color: string;
-  style: 'solid' | 'dashed' | 'dotted' | 'double';
+  style: 'solid' | 'dashed' | 'dotted' | 'double' | 'default' | 'glass-light' | 'glass-dark' | 'outline' | 'border' | 'retro' | 'card' | 'stack' | 'stack2' | 'overlay' | 'liquid';
 }
 
 export interface ImageShadow {
@@ -97,9 +97,9 @@ export const useImageStore = create<ImageState>((set, get) => ({
   imageScale: 100,
   imageBorder: {
     enabled: false,
-    width: 2,
-    color: '#000000',
-    style: 'solid',
+    width: 3,
+    color: '#e5e7eb',
+    style: 'default',
   },
   imageShadow: {
     enabled: false,

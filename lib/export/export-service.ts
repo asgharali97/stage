@@ -1,7 +1,13 @@
 /**
- * Export service for handling image exports
- * Uses html2canvas for backgrounds, Konva for user-uploaded images,
- * and modern-screenshot for 3D perspective transforms
+ * Export service for handling image exports (fully in-browser)
+ *
+ * Pure Canvas Architecture:
+ * - Uses Konva canvas for ALL rendering (background, patterns, noise, images, text, overlays)
+ * - Only uses modern-screenshot for 3D perspective transforms (HTML fallback)
+ * - No html2canvas for backgrounds/overlays (everything is in Konva now)
+ *
+ * All export operations run client-side without external services.
+ * Cloudinary is optional and only used for image optimization when configured.
  */
 
 import html2canvas from 'html2canvas';
@@ -373,6 +379,9 @@ async function applyNoiseToCanvas(
 
 /**
  * Export overlays (text and image) separately to ensure they appear above user image
+ *
+ * NOTE: This function is deprecated and no longer used with pure canvas architecture.
+ * Text and image overlays are now rendered in Konva canvas. Kept for backwards compatibility.
  */
 async function exportOverlays(
   width: number,
@@ -576,44 +585,46 @@ async function exportOverlays(
       let imageSrc = overlay.src;
       if (typeof overlay.src === 'string' && !overlay.isCustom) {
         const isCloudinaryId = overlay.src.startsWith('overlays/');
-        
+
         if (isCloudinaryId) {
-          const cloudName = typeof window !== 'undefined' 
+          const cloudName = typeof window !== 'undefined'
             ? (window as any).__NEXT_DATA__?.env?.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
               (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string)
             : (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string);
-          
+
+          // If Cloudinary is not configured, log warning but use src directly
           if (!cloudName) {
-            throw new Error(`Cloudinary cloud name not found. Please ensure NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is set in your environment variables.`);
-          }
-          
-          // Calculate export size based on uniform scale to maintain aspect ratio
-          // Use overlay.size scaled by the uniform scale factor, with 2x for high-res export
-          const exportSize = Math.max(Math.round(overlay.size * scaleX * 2), 200);
-          
-          try {
-            const { getCldImageUrl } = await import('@/lib/cloudinary');
-            // Request square dimensions from Cloudinary to match the square container
-            // The 'fit' crop will maintain the image's aspect ratio within the square
-            const generatedUrl = getCldImageUrl({
-              src: overlay.src,
-              width: exportSize,
-              height: exportSize,
-              quality: 'auto',
-              format: 'auto',
-              crop: 'fit', // Maintain aspect ratio, fit within square bounds
-            });
-            
-            if (generatedUrl && (generatedUrl.startsWith('http://') || generatedUrl.startsWith('https://'))) {
-              imageSrc = generatedUrl;
-            } else {
+            console.warn(`Cloudinary cloud name not found. Image overlay "${overlay.src}" will be used as-is. For optimized images, set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME in your environment variables.`);
+            // Use the src directly - it might be a local URL or uploaded image
+          } else {
+            // Calculate export size based on uniform scale to maintain aspect ratio
+            // Use overlay.size scaled by the uniform scale factor, with 2x for high-res export
+            const exportSize = Math.max(Math.round(overlay.size * scaleX * 2), 200);
+
+            try {
+              const { getCldImageUrl } = await import('@/lib/cloudinary');
+              // Request square dimensions from Cloudinary to match the square container
+              // The 'fit' crop will maintain the image's aspect ratio within the square
+              const generatedUrl = getCldImageUrl({
+                src: overlay.src,
+                width: exportSize,
+                height: exportSize,
+                quality: 'auto',
+                format: 'auto',
+                crop: 'fit', // Maintain aspect ratio, fit within square bounds
+              });
+
+              if (generatedUrl && (generatedUrl.startsWith('http://') || generatedUrl.startsWith('https://'))) {
+                imageSrc = generatedUrl;
+              } else {
+                // Fallback: construct Cloudinary URL manually with 'fit' crop
+                imageSrc = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto,c_fit,w_${exportSize},h_${exportSize}/${overlay.src}`;
+              }
+            } catch (error) {
+              console.warn(`getCldImageUrl failed for ${overlay.src}, using manual URL construction:`, error);
               // Fallback: construct Cloudinary URL manually with 'fit' crop
               imageSrc = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto,c_fit,w_${exportSize},h_${exportSize}/${overlay.src}`;
             }
-          } catch (error) {
-            console.warn(`getCldImageUrl failed for ${overlay.src}, using manual URL construction:`, error);
-            // Fallback: construct Cloudinary URL manually with 'fit' crop
-            imageSrc = `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto,c_fit,w_${exportSize},h_${exportSize}/${overlay.src}`;
           }
         }
       }
@@ -704,6 +715,9 @@ async function exportOverlays(
 
 /**
  * Export background only (without overlays) using html2canvas
+ *
+ * NOTE: This function is deprecated and no longer used with pure canvas architecture.
+ * Background is now rendered in Konva canvas. Kept for backwards compatibility.
  */
 async function exportBackground(
   width: number,
@@ -1010,7 +1024,8 @@ async function capture3DTransformWithModernScreenshot(
 }
 
 /**
- * Export Konva stage as canvas (excluding background layer)
+ * Export Konva stage as canvas (including all layers - background, patterns, images, overlays)
+ * Now that everything is rendered in Konva, we export the complete stage
  */
 async function exportKonvaStage(
   stage: Konva.Stage | null,
@@ -1023,91 +1038,74 @@ async function exportKonvaStage(
   if (!stage) {
     throw new Error('Konva stage not found');
   }
-  
+
   // Get current stage dimensions (display dimensions)
   const originalWidth = stage.width();
   const originalHeight = stage.height();
-  
-  // Get all layers
-  const layers = stage.getLayers();
-  
-  // Find background layer (first layer typically contains backgrounds)
-  const backgroundLayer = layers[0];
-  const wasBackgroundVisible = backgroundLayer ? backgroundLayer.visible() : true;
-  
-  try {
-    // Temporarily hide background layer
-    if (backgroundLayer) {
-      backgroundLayer.visible(false);
-    }
-    
-    // Calculate scale factor to match export dimensions
-    const scaleX = targetWidth / originalWidth;
-    const scaleY = targetHeight / originalHeight;
-    
-    // Export Konva stage at its current dimensions with high pixelRatio
-    // This preserves exact positioning
-    const exportPixelRatio = scale * Math.max(scaleX, scaleY);
-    const dataURL = stage.toDataURL({
-      mimeType: 'image/png',
-      quality: quality,
-      pixelRatio: exportPixelRatio,
-    });
-    
-    // Convert data URL to canvas
-    const tempCanvas = document.createElement('canvas');
-    const tempImg = new Image();
-    await new Promise<void>((resolve, reject) => {
-      tempImg.onload = () => {
-        tempCanvas.width = tempImg.width;
-        tempCanvas.height = tempImg.height;
-        const tempCtx = tempCanvas.getContext('2d');
-        if (!tempCtx) {
-          reject(new Error('Failed to get canvas context'));
-          return;
-        }
-        tempCtx.drawImage(tempImg, 0, 0);
-        resolve();
-      };
-      tempImg.onerror = reject;
-      tempImg.src = dataURL;
-    });
-    
-    // Now scale the canvas to match export dimensions
-    const finalCanvas = document.createElement('canvas');
-    finalCanvas.width = targetWidth * scale;
-    finalCanvas.height = targetHeight * scale;
-    const ctx = finalCanvas.getContext('2d');
-    
-    if (!ctx) {
-      throw new Error('Failed to get canvas context');
-    }
-    
-    // Use high-quality image scaling
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    
-    // Draw the scaled image
-    ctx.drawImage(
-      tempCanvas,
-      0, 0, tempCanvas.width, tempCanvas.height,
-      0, 0, targetWidth * scale, targetHeight * scale
-    );
-    
-    return finalCanvas;
-  } finally {
-    // Restore visibility
-    if (backgroundLayer) {
-      backgroundLayer.visible(wasBackgroundVisible);
-    }
-    stage.getLayers().forEach(layer => layer.draw());
+
+  // Calculate scale factor to match export dimensions
+  const scaleX = targetWidth / originalWidth;
+  const scaleY = targetHeight / originalHeight;
+
+  // Export Konva stage at its current dimensions with high pixelRatio
+  // This preserves exact positioning and includes ALL layers (background, patterns, images, text, overlays)
+  const exportPixelRatio = scale * Math.max(scaleX, scaleY);
+  const dataURL = stage.toDataURL({
+    mimeType: 'image/png',
+    quality: quality,
+    pixelRatio: exportPixelRatio,
+  });
+
+  // Convert data URL to canvas
+  const tempCanvas = document.createElement('canvas');
+  const tempImg = new Image();
+  await new Promise<void>((resolve, reject) => {
+    tempImg.onload = () => {
+      tempCanvas.width = tempImg.width;
+      tempCanvas.height = tempImg.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) {
+        reject(new Error('Failed to get canvas context'));
+        return;
+      }
+      tempCtx.drawImage(tempImg, 0, 0);
+      resolve();
+    };
+    tempImg.onerror = reject;
+    tempImg.src = dataURL;
+  });
+
+  // Now scale the canvas to match export dimensions
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = targetWidth * scale;
+  finalCanvas.height = targetHeight * scale;
+  const ctx = finalCanvas.getContext('2d');
+
+  if (!ctx) {
+    throw new Error('Failed to get canvas context');
   }
+
+  // Use high-quality image scaling
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  // Draw the scaled image
+  ctx.drawImage(
+    tempCanvas,
+    0, 0, tempCanvas.width, tempCanvas.height,
+    0, 0, targetWidth * scale, targetHeight * scale
+  );
+
+  return finalCanvas;
 }
 
 
 /**
  * Composite background, Konva stage, and overlays into final canvas
  * Layer order: background -> user image (Konva) -> text overlays -> image overlays
+ *
+ * NOTE: This function is deprecated and no longer used with pure canvas architecture.
+ * Kept for backwards compatibility. Everything is now in Konva stage.
  */
 function compositeCanvases(
   backgroundCanvas: HTMLCanvasElement,
@@ -1145,7 +1143,9 @@ function compositeCanvases(
 }
 
 /**
- * Export element using hybrid approach: html2canvas for background, Konva for images
+ * Export element using pure canvas approach: Konva stage contains everything
+ * (background, patterns, noise, main image, text overlays, image overlays)
+ * Only 3D transforms use HTML fallback since Konva doesn't support CSS 3D transforms
  */
 export async function exportElement(
   elementId: string,
@@ -1175,19 +1175,8 @@ export async function exportElement(
   }
 
   try {
-    // Step 1: Export background only (without overlays)
-    const backgroundCanvas = await exportBackground(
-      options.exportWidth,
-      options.exportHeight,
-      options.scale,
-      backgroundConfig,
-      backgroundBorderRadius,
-      backgroundBlur,
-      backgroundNoise,
-      backgroundOpacity
-    );
-
-    // Step 2: Export Konva stage (user images, frames, patterns, etc.) - excluding backgrounds
+    // Step 1: Export Konva stage (includes ALL layers: background, patterns, noise, main image, text overlays, image overlays)
+    // Since we moved to pure canvas rendering, everything is in the Konva stage
     let konvaCanvas = await exportKonvaStage(
       konvaStage,
       options.exportWidth,
@@ -1196,19 +1185,8 @@ export async function exportElement(
       options.format,
       options.quality
     );
-    
-    // Step 2.5: Export overlays separately to ensure they appear above user image
-    const overlaysCanvas = (textOverlays.length > 0 || imageOverlays.length > 0)
-      ? await exportOverlays(
-          options.exportWidth,
-          options.exportHeight,
-          options.scale,
-          textOverlays,
-          imageOverlays
-        )
-      : null;
 
-    // Step 2.5: If 3D transforms are active, capture using modern-screenshot
+    // Step 2: If 3D transforms are active, capture using modern-screenshot and composite on top
     if (perspective3D && imageSrc) {
       const has3DTransform = 
         perspective3D.rotateX !== 0 ||
@@ -1272,15 +1250,9 @@ export async function exportElement(
       }
     }
 
-    // Step 3: Composite all layers in correct order: background -> user image -> overlays
-    const finalCanvas = compositeCanvases(
-      backgroundCanvas,
-      konvaCanvas,
-      overlaysCanvas,
-      options.exportWidth,
-      options.exportHeight,
-      options.scale
-    );
+    // Step 3: Use the Konva canvas as the final canvas (it already contains everything)
+    // No need to composite multiple layers since everything is in Konva now
+    const finalCanvas = konvaCanvas;
 
     // Step 4: Add watermark
     addWatermarkToCanvas(finalCanvas, {

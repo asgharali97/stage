@@ -14,7 +14,7 @@ const features = [
   {
     title: "Professional Export",
     description:
-      "Export as PNG (with transparency) or JPG with adjustable quality and scale up to 5x. Perfect for social media and high-resolution output.",
+      "Export as PNG (with transparency) with adjustable quality and scale up to 5x. All processing happens in your browser—no external services required. Perfect for social media and high-resolution output.",
   },
 ];
 
@@ -23,7 +23,7 @@ export default function Home() {
     <LandingPage
       heroTitle="Create stunning visual designs"
       heroSubtitle="with Stage"
-      heroDescription="A modern canvas editor that brings your ideas to life. Add images, text, backgrounds, and export your creations in high quality. Built for designers and creators."
+      heroDescription="A fully in-browser canvas editor that brings your ideas to life. Add images, text, backgrounds, and export your creations in high quality—all without external services. Built for designers and creators."
       ctaLabel="Get Started"
       ctaHref="/home"
       features={features}

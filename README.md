@@ -37,6 +37,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
   - Open Graph, Twitter Banner, LinkedIn Banner, YouTube Banner
 - **Presets** - One-click professional styling presets
 - **Export Options** - PNG format with adjustable quality (0-1) and scale (up to 5x)
+  - **Fully In-Browser Export** - All export operations run client-side without external services
 - **Copy to Clipboard** - Copy designs directly to clipboard
 
 ### User Experience
@@ -66,7 +67,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
    ```
 
 3. **Set up environment variables** (optional)
-   
+
    Create a `.env.local` file in the root directory:
    ```env
    # Optional: Cloudinary Configuration (for image optimization)
@@ -78,7 +79,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
    SCREENSHOTAPI_KEY=your-screenshot-api-key
    ```
 
-   > **Note**: The app works without these environment variables, but some features (like Cloudinary image optimization and website screenshots) will be limited.
+   > **Note**: The app works completely without these environment variables. All core features including **export work fully in-browser**. Cloudinary is only used for optional image optimization of backgrounds and overlays.
 
 4. **Start the development server**
    ```bash
@@ -114,6 +115,7 @@ A modern web-based canvas editor for creating stunning visual designs. Upload im
    - Click the export button
    - Adjust quality and scale settings
    - Download as PNG or copy to clipboard
+   - **All export processing happens in your browser** - no external services required
 
 ## 🛠️ Tech Stack
 
@@ -175,13 +177,22 @@ For detailed architecture information, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## 🏗️ Architecture
 
-Stage uses a hybrid canvas rendering approach:
+Stage is a **fully in-browser canvas editor** that requires no external services for core functionality.
+
+### Export Pipeline (100% Client-Side)
+
+Stage uses a hybrid canvas rendering approach with complete in-browser processing:
 
 - **Background Layer** - Rendered via HTML/CSS, captured with html2canvas
 - **User Image Layer** - Rendered via Konva Stage for precise positioning
 - **Overlay Layer** - Text and image overlays composited on top
 
-The export pipeline composites these layers in the correct order to produce high-quality output.
+The export pipeline composites these layers client-side in the correct order to produce high-quality output without any server or external API calls.
+
+### Optional Services
+
+- **Cloudinary** - Used only for image optimization when configured (completely optional)
+- **Screenshot API** - Used only for website screenshot capture feature (optional)
 
 For comprehensive architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 

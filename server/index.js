@@ -6,6 +6,8 @@ import { z } from 'zod';
 
 dotenv.config();
 
+process.env.PLAYWRIGHT_BROWSERS_PATH = process.env.PLAYWRIGHT_BROWSERS_PATH || '0';
+
 const app = express();
 const PORT = process.env.PORT || process.env.SCREENSHOT_SERVICE_PORT || 3001;
 

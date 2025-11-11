@@ -114,8 +114,9 @@ Health check endpoint.
    - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm start`
    - **Plan**: Starter (minimum) or higher for better performance
-6. Add Environment Variables (optional):
+6. Add Environment Variables:
    - `NODE_ENV`: `production`
+   - `PLAYWRIGHT_BROWSERS_PATH`: `0` (required - tells Playwright to use browsers in node_modules)
    - `PORT`: (auto-set by Render)
 7. Click "Create Web Service"
 
@@ -168,6 +169,7 @@ pm2 save
 - `PORT` - Port number (auto-set by Render, defaults to 3001 locally)
 - `SCREENSHOT_SERVICE_PORT` - Alternative port setting (fallback if PORT not set)
 - `NODE_ENV` - Environment mode (`production` or `development`)
+- `PLAYWRIGHT_BROWSERS_PATH` - **Required**: Set to `0` to use browsers installed in `node_modules` (critical for Render deployment)
 - `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins (optional, defaults to `*` allowing all)
   - Example: `https://your-app.vercel.app,https://www.yourdomain.com`
   - **Note**: Server-to-server requests (from Next.js API routes) don't require CORS, but this is useful if you need browser access

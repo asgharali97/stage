@@ -254,20 +254,21 @@ The export pipeline composites these layers client-side in the correct order to 
 
 For comprehensive architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
-## 🤝 Contributing
+## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, project structure, and contribution guidelines.
 
-### Quick Contribution Guide
+## Contributors
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+Thanks to all our amazing contributors for their support and code!
 
-For detailed contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+<a href="https://github.com/KartikLabhshetwar/stage/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=KartikLabhshetwar/stage" />
+</a>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=KartikLabhshetwar/stage&type=Date)](https://star-history.com/#KartikLabhshetwar/stage&Date)
 
 ## 📚 Documentation
 

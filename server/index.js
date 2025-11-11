@@ -24,10 +24,10 @@ async function verifyPlaywrightInstallation() {
   } catch (error) {
     console.error('✗ Playwright browser not available:', error.message);
     console.error('Browser path:', process.env.PLAYWRIGHT_BROWSERS_PATH || 'default');
-    console.error('Please ensure build command includes: PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps chromium');
+    console.error('Please ensure build command includes: PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium');
     console.error('This error usually means:');
     console.error('1. Browsers were not installed during build');
-    console.error('2. System dependencies are missing (use --with-deps flag)');
+    console.error('2. System dependencies are missing (Render should have these pre-installed)');
     console.error('3. Browser path is incorrect');
     process.exit(1);
   }

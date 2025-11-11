@@ -122,11 +122,11 @@ Health check endpoint.
 **Render-specific notes:**
 - The `render.yaml` file is included for automatic configuration
 - Playwright browsers are installed during the build step using `PLAYWRIGHT_BROWSERS_PATH=0` to ensure they persist in `node_modules`
-- System dependencies are automatically installed with `--with-deps` flag
+- System dependencies are pre-installed in Render's Node.js environment (no `--with-deps` needed)
 - Health check endpoint is automatically configured at `/health`
 - Minimum 512MB RAM recommended (Starter plan)
 - For production, consider upgrading to Standard plan for better performance
-- Build time: ~3-5 minutes (includes browser download ~280MB)
+- Build time: ~2-3 minutes (includes browser download ~280MB)
 
 ### Option 2: Railway
 
@@ -195,12 +195,13 @@ curl -X POST http://localhost:3001/screenshot \
 ### "Failed to launch browser" or "Executable doesn't exist"
 
 **On Render:**
-- The build command automatically includes `PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps chromium`
-- This installs browsers in `node_modules` (which persists) and system dependencies
+- The build command automatically includes `PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium`
+- This installs browsers in `node_modules` (which persists) - system dependencies are pre-installed
 - Check build logs to verify Playwright installation succeeded (look for "Chromium downloaded")
 - If the error persists, verify the build completed successfully
 - Ensure you're using the `render.yaml` configuration or manually set the build command
 - If issues persist, upgrade to a plan with more resources (Standard plan recommended)
+- Note: We don't use `--with-deps` because Render doesn't allow root access, but system deps are pre-installed
 
 **Local/Self-hosted:**
 Install system dependencies:

@@ -538,14 +538,14 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     <div
       ref={containerRef}
       id="image-render-card"
-      className="flex items-center justify-center relative"
+      className="flex items-center justify-center"
       style={{
-        width: '100%',
+        width: `${containerWidth}px`,
         maxWidth: `${containerWidth}px`,
         aspectRatio: responsiveDimensions.aspectRatio,
         maxHeight: 'calc(100vh - 200px)',
         backgroundColor: 'transparent',
-        padding: '24px',
+        padding: '0px',
       }}
     >
       <div
@@ -562,38 +562,421 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
         {has3DTransform && (
           <div
             data-3d-overlay="true"
+            data-untransformed-x={groupCenterX - framedW / 2}
+            data-untransformed-y={groupCenterY - framedH / 2}
+            data-untransformed-width={framedW}
+            data-untransformed-height={framedH}
             style={{
               position: 'absolute',
-              left: `${imageX}px`,
-              top: `${imageY}px`,
-              width: `${imageScaledW}px`,
-              height: `${imageScaledH}px`,
+              left: 0,
+              top: 0,
+              width: `${canvasW}px`,
+              height: `${canvasH}px`,
               perspective: `${perspective3D.perspective}px`,
               transformStyle: 'preserve-3d',
               zIndex: 15,
               pointerEvents: 'none',
+              overflow: 'visible',
             }}
           >
-            <img
-              src={image.src}
-              alt="3D transformed"
+            {/* Shadow wrapper - transforms with the frame */}
+            <div
               style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                opacity: imageOpacity,
-                borderRadius:
-                  showFrame && frame.type === 'window'
-                    ? '0 0 12px 12px'
-                    : showFrame && frame.type === 'ruler'
-                    ? `${screenshot.radius * 0.8}px`
-                    : `${screenshot.radius}px`,
+                position: 'absolute',
+                left: `${groupCenterX - framedW / 2}px`,
+                top: `${groupCenterY - framedH / 2}px`,
+                width: `${framedW}px`,
+                height: `${framedH}px`,
                 transform: perspective3DTransform,
                 transformOrigin: 'center center',
                 willChange: 'transform',
                 transition: 'transform 0.125s linear',
+                ...(shadow.enabled && {
+                  filter: `drop-shadow(${
+                    shadow.side === 'bottom'
+                      ? `0px ${shadow.elevation}px`
+                      : shadow.side === 'right'
+                      ? `${shadow.elevation}px 0px`
+                      : shadow.side === 'bottom-right'
+                      ? `${shadow.elevation * 0.707}px ${shadow.elevation * 0.707}px`
+                      : '0px 0px'
+                  } ${shadow.softness}px ${shadow.color})`,
+                  opacity: shadow.intensity,
+                }),
               }}
-            />
+            >
+              {/* Frame Container */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                {/* Solid Frame */}
+                {showFrame && frame.type === 'solid' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      backgroundColor: frame.color,
+                      borderRadius: `${screenshot.radius}px`,
+                    }}
+                  />
+                )}
+
+                {/* Glassy Frame */}
+                {showFrame && frame.type === 'glassy' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: `${frameOffset + windowPadding}px`,
+                      top: `${frameOffset + windowPadding + windowHeader}px`,
+                      width: `${imageScaledW}px`,
+                      height: `${imageScaledH}px`,
+                      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                      border: `${frame.width * 4 + 6}px solid rgba(255, 255, 255, 0.3)`,
+                      borderRadius: `${screenshot.radius}px`,
+                    }}
+                  />
+                )}
+
+                {/* Ruler Frame */}
+                {showFrame && frame.type === 'ruler' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: `${screenshot.radius}px`,
+                      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                      border: '1px solid rgba(255, 255, 255, 0.9)',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    {/* Ruler marks background */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        borderRadius: `${screenshot.radius}px`,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {/* Top ruler marks */}
+                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '10px' }}>
+                        {Array.from({ length: Math.floor(framedW / 10) - 1 }).map((_, i) => (
+                          <div
+                            key={`t-${i}`}
+                            style={{
+                              position: 'absolute',
+                              left: `${i * 10}px`,
+                              top: '1px',
+                              width: '2px',
+                              height: (i + 1) % 5 === 0 ? '10px' : '5px',
+                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            }}
+                          />
+                        ))}
+                      </div>
+                      {/* Left ruler marks */}
+                      <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '10px' }}>
+                        {Array.from({ length: Math.floor(framedH / 10) - 1 }).map((_, i) => (
+                          <div
+                            key={`l-${i}`}
+                            style={{
+                              position: 'absolute',
+                              left: '1px',
+                              top: `${i * 10}px`,
+                              width: (i + 1) % 5 === 0 ? '10px' : '5px',
+                              height: '2px',
+                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Infinite Mirror Frame */}
+                {showFrame && frame.type === 'infinite-mirror' && (
+                  <>
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          position: 'absolute',
+                          left: `${-i * 7.5}px`,
+                          top: `${-i * 7.5}px`,
+                          width: `${framedW + i * 15}px`,
+                          height: `${framedH + i * 15}px`,
+                          border: `4px solid ${frame.color}`,
+                          borderRadius: `${screenshot.radius + i * 5}px`,
+                          opacity: 0.3 - i * 0.07,
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+
+                {/* Eclipse Frame */}
+                {showFrame && frame.type === 'eclipse' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: `${screenshot.radius + eclipseBorder}px`,
+                      backgroundColor: frame.color,
+                      border: `${eclipseBorder}px solid ${frame.color}`,
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                )}
+
+                {/* Stack Frame */}
+                {showFrame && frame.type === 'stack' && (
+                  <>
+                    {/* Bottom layer */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${(framedW - framedW / 1.2) / 2}px`,
+                        top: '-40px',
+                        width: `${framedW / 1.2}px`,
+                        height: `${framedH / 5}px`,
+                        backgroundColor: frame.theme === 'dark' ? '#444444' : '#f5f5f5',
+                        borderRadius: `${screenshot.radius}px`,
+                      }}
+                    />
+                    {/* Middle layer */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${(framedW - framedW / 1.1) / 2}px`,
+                        top: '-20px',
+                        width: `${framedW / 1.1}px`,
+                        height: `${framedH / 5}px`,
+                        backgroundColor: frame.theme === 'dark' ? '#2a2a2a' : '#f0f0f0',
+                        borderRadius: `${screenshot.radius}px`,
+                      }}
+                    />
+                    {/* Top layer */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundColor: frame.theme === 'dark' ? '#555555' : '#e8e8e8',
+                        borderRadius: `${screenshot.radius}px`,
+                      }}
+                    />
+                  </>
+                )}
+
+                {/* Window Frame */}
+                {showFrame && frame.type === 'window' && (
+                  <>
+                    {/* Main window background */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundColor: frame.theme === 'dark' ? '#2f2f2f' : '#fefefe',
+                        borderRadius: `${screenshot.radius}px`,
+                      }}
+                    />
+                    {/* Header */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: `${windowHeader}px`,
+                        backgroundColor: frame.theme === 'dark' ? '#4a4a4a' : '#e2e2e2',
+                        borderRadius: `${screenshot.radius}px ${screenshot.radius}px 0 0`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {/* Window control buttons */}
+                      <div style={{ position: 'absolute', left: '15px', display: 'flex', gap: '8px' }}>
+                        <div
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: '#ff5f57',
+                          }}
+                        />
+                        <div
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: '#febc2e',
+                          }}
+                        />
+                        <div
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: '#28c840',
+                          }}
+                        />
+                      </div>
+                      {/* Title */}
+                      {frame.title && (
+                        <div
+                          style={{
+                            color: frame.theme === 'dark' ? '#f0f0f0' : '#4f4f4f',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                          }}
+                        >
+                          {frame.title}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Dotted Frame */}
+                {showFrame && frame.type === 'dotted' && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      border: `${frame.width}px dashed ${frame.color}`,
+                      borderRadius: `${screenshot.radius}px`,
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                )}
+
+                {/* Focus Frame - Corner brackets */}
+                {showFrame && frame.type === 'focus' && (
+                  <>
+                    {/* Top-left corner */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${frameOffset}px`,
+                        top: `${frameOffset}px`,
+                        width: `${frame.width * 3}px`,
+                        height: `${frame.width}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `${frame.width / 2}px 0 0 0`,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${frameOffset}px`,
+                        top: `${frameOffset}px`,
+                        width: `${frame.width}px`,
+                        height: `${frame.width * 3}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `${frame.width / 2}px 0 0 0`,
+                      }}
+                    />
+                    {/* Top-right corner */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: `${frameOffset}px`,
+                        top: `${frameOffset}px`,
+                        width: `${frame.width * 3}px`,
+                        height: `${frame.width}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `0 ${frame.width / 2}px 0 0`,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: `${frameOffset}px`,
+                        top: `${frameOffset}px`,
+                        width: `${frame.width}px`,
+                        height: `${frame.width * 3}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `0 ${frame.width / 2}px 0 0`,
+                      }}
+                    />
+                    {/* Bottom-left corner */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${frameOffset}px`,
+                        bottom: `${frameOffset}px`,
+                        width: `${frame.width * 3}px`,
+                        height: `${frame.width}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `0 0 0 ${frame.width / 2}px`,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: `${frameOffset}px`,
+                        bottom: `${frameOffset}px`,
+                        width: `${frame.width}px`,
+                        height: `${frame.width * 3}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `0 0 0 ${frame.width / 2}px`,
+                      }}
+                    />
+                    {/* Bottom-right corner */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: `${frameOffset}px`,
+                        bottom: `${frameOffset}px`,
+                        width: `${frame.width * 3}px`,
+                        height: `${frame.width}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `0 0 ${frame.width / 2}px 0`,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: `${frameOffset}px`,
+                        bottom: `${frameOffset}px`,
+                        width: `${frame.width}px`,
+                        height: `${frame.width * 3}px`,
+                        backgroundColor: frame.color,
+                        borderRadius: `0 0 ${frame.width / 2}px 0`,
+                      }}
+                    />
+                  </>
+                )}
+
+                {/* Main Image */}
+                <img
+                  src={image.src}
+                  alt="3D transformed"
+                  style={{
+                    position: 'absolute',
+                    left: `${frameOffset + windowPadding}px`,
+                    top: `${frameOffset + windowPadding + windowHeader}px`,
+                    width: `${imageScaledW}px`,
+                    height: `${imageScaledH}px`,
+                    objectFit: 'cover',
+                    opacity: imageOpacity,
+                    borderRadius:
+                      showFrame && frame.type === 'window'
+                        ? `0 0 ${screenshot.radius}px ${screenshot.radius}px`
+                        : showFrame && frame.type === 'ruler'
+                        ? `${screenshot.radius * 0.8}px`
+                        : `${screenshot.radius}px`,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )}
 
@@ -771,8 +1154,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                     }
                   }}
                 >
-                {/* Solid Frame */}
-                {showFrame && frame.type === 'solid' && (
+                {/* Solid Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'solid' && !has3DTransform && (
                   <Rect
                     width={framedW}
                     height={framedH}
@@ -782,8 +1165,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   />
                 )}
 
-                {/* Glassy Frame */}
-                {showFrame && frame.type === 'glassy' && (
+                {/* Glassy Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'glassy' && !has3DTransform && (
                   <Rect
                     x={frameOffset + windowPadding}
                     y={frameOffset + windowPadding + windowHeader}
@@ -798,8 +1181,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   />
                 )}
 
-                {/* Ruler Frame */}
-                {showFrame && frame.type === 'ruler' && (
+                {/* Ruler Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'ruler' && !has3DTransform && (
                   <Group>
                     <Rect
                       width={framedW}
@@ -893,8 +1276,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   </Group>
                 )}
 
-                {/* Infinite Mirror Frame */}
-                {showFrame && frame.type === 'infinite-mirror' && (
+                {/* Infinite Mirror Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'infinite-mirror' && !has3DTransform && (
                   <>
                     {Array.from({ length: 4 }).map((_, i) => (
                       <Rect
@@ -915,8 +1298,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   </>
                 )}
 
-                {/* Eclipse Frame */}
-                {showFrame && frame.type === 'eclipse' && (
+                {/* Eclipse Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'eclipse' && !has3DTransform && (
                   <Group>
                     <Rect
                       width={framedW}
@@ -937,8 +1320,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   </Group>
                 )}
 
-                {/* Stack Frame */}
-                {showFrame && frame.type === 'stack' && (
+                {/* Stack Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'stack' && !has3DTransform && (
                   <>
                     {/* Bottom layer - darkest */}
                     <Rect
@@ -972,8 +1355,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   </>
                 )}
 
-                {/* Window Frame */}
-                {showFrame && frame.type === 'window' && (
+                {/* Window Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'window' && !has3DTransform && (
                   <>
                     <Rect // main window
                       width={framedW}
@@ -1016,8 +1399,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   </>
                 )}
 
-                {/* Dotted Frame */}
-                {showFrame && frame.type === 'dotted' && (
+                {/* Dotted Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'dotted' && !has3DTransform && (
                   <Rect
                     width={framedW}
                     height={framedH}
@@ -1028,8 +1411,8 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
                   />
                 )}
 
-                {/* Focus Frame */}
-                {showFrame && frame.type === 'focus' && (
+                {/* Focus Frame - Hide in 3D mode */}
+                {showFrame && frame.type === 'focus' && !has3DTransform && (
                   <Group>
                     <Path
                       data={`M ${frameOffset}, ${

@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { FaImage, FaTimes } from 'react-icons/fa';
 import { BackgroundEffects } from '@/components/controls/BackgroundEffects';
+import { PresetGallery } from '@/components/presets/PresetGallery';
 
 export function EditorRightPanel() {
   const { 
@@ -98,6 +99,12 @@ export function EditorRightPanel() {
         <>
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            {/* Presets Section */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide">Presets</h4>
+              <PresetGallery />
+            </div>
+
             {/* Background Section */}
             <div className="space-y-4">
               <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide">Background</h4>

@@ -73,6 +73,28 @@ export function Perspective3DOverlay({
     .replace(/\s+/g, ' ')
     .trim();
 
+  const colorMatch = shadow.color.match(/rgba?\(([^)]+)\)/)
+  let shadowColor = shadow.color
+  let shadowOpacity = shadow.intensity
+  
+  if (colorMatch) {
+    const parts = colorMatch[1].split(',').map(s => s.trim())
+    if (parts.length === 4) {
+      shadowOpacity = parseFloat(parts[3]) || shadow.intensity
+      shadowColor = `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${Math.min(1, Math.max(0, shadowOpacity))})`
+    } else if (parts.length === 3) {
+      shadowColor = `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${Math.min(1, Math.max(0, shadow.intensity))})`
+    }
+  } else if (shadow.color.startsWith('#')) {
+    const hex = shadow.color.replace('#', '')
+    const r = parseInt(hex.slice(0, 2), 16)
+    const g = parseInt(hex.slice(2, 4), 16)
+    const b = parseInt(hex.slice(4, 6), 16)
+    shadowColor = `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, shadow.intensity))})`
+  } else {
+    shadowColor = `rgba(0, 0, 0, ${Math.min(1, Math.max(0, shadow.intensity))})`
+  }
+
   const shadowFilter = shadow.enabled
     ? `drop-shadow(${
         shadow.side === 'bottom'
@@ -82,7 +104,7 @@ export function Perspective3DOverlay({
           : shadow.side === 'bottom-right'
           ? `${shadow.elevation * 0.707}px ${shadow.elevation * 0.707}px`
           : '0px 0px'
-      } ${shadow.softness}px ${shadow.color})`
+      } ${shadow.softness}px ${shadowColor})`
     : `drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.2))`;
 
   return (
@@ -118,7 +140,7 @@ export function Perspective3DOverlay({
           willChange: 'transform',
           transition: 'transform 0.125s linear',
           filter: shadowFilter,
-          opacity: shadow.enabled ? shadow.intensity : 1,
+          opacity: 1,
         }}
       >
         <div

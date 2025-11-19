@@ -13,20 +13,20 @@ export function ArrowGallery() {
 
   const getDefaultPosition = () => {
     const canvasWidth = responsiveDimensions.width || 1920
-    const overlaySize = 150
-    return {
-      x: Math.max(20, (canvasWidth / 2) - (overlaySize / 2)),
-      y: 30,
-    }
+    const overlaySize = 80
+    const x = Math.max(20, (canvasWidth / 2) - (overlaySize / 2))
+    const y = 30
+    return { x, y }
   }
 
   const handleAddArrow = (arrowUrl: string) => {
-    const defaultPosition = getDefaultPosition()
+    const { x, y } = getDefaultPosition()
+    const overlaySize = 80
     addImageOverlay({
       src: arrowUrl,
-      position: defaultPosition,
-      size: 150,
-      rotation: 0,
+      position: { x, y },
+      size: overlaySize,
+      rotation: 45,
       opacity: 0.9,
       flipX: false,
       flipY: false,

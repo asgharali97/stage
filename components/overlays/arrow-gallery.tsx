@@ -52,7 +52,7 @@ export function ArrowGallery() {
               src={arrowUrl}
               alt={`Arrow ${index + 1}`}
               className="w-full h-full object-contain group-hover:scale-105 transition-transform"
-              style={{ display: 'block' }}
+              style={{ display: 'block', filter: 'brightness(0) invert(1)' }}
             />
           </button>
         ))}

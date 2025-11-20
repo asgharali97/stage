@@ -307,7 +307,7 @@ export function useEditorStoreSync() {
     // Sync background
     const bgConfig = imageStore.backgroundConfig
     if (bgConfig.type === 'gradient') {
-      const gradientStr = gradientColors[bgConfig.value as GradientKey] || gradientColors.sunset_vibes
+      const gradientStr = gradientColors[bgConfig.value as GradientKey] || gradientColors.vibrant_orange_pink
       const { colorA, colorB, direction } = parseGradientColors(gradientStr)
       if (
         editorStore.background.mode !== 'gradient' ||
@@ -463,7 +463,7 @@ interface ImageState {
 export const useImageStore = create<ImageState>((set, get) => ({
   uploadedImageUrl: null,
   imageName: null,
-  selectedGradient: 'sunset_vibes',
+  selectedGradient: 'vibrant_orange_pink',
   borderRadius: 10,
   backgroundBorderRadius: 10,
   selectedAspectRatio: '16_9',
@@ -519,7 +519,7 @@ export const useImageStore = create<ImageState>((set, get) => ({
         opacity: 1,
         
       },
-      selectedGradient: 'orange_fire',
+      selectedGradient: 'pink_orange',
       imageShadow: {
         enabled: true,
         blur: 24,

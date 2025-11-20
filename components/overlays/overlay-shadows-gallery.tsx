@@ -33,7 +33,7 @@ export function OverlayShadowsGallery() {
       position: { x, y },
       size,
       rotation: 0,
-      opacity: 1,
+      opacity: 0.5,
       flipX: false,
       flipY: false,
       isVisible: true,

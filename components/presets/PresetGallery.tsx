@@ -37,6 +37,7 @@ export function PresetGallery({ onPresetSelect }: PresetGalleryProps) {
     setImageScale,
     setImageBorder,
     setImageShadow,
+    setPerspective3D,
   } = useImageStore();
 
   const { screenshot } = useEditorStore();
@@ -86,6 +87,9 @@ export function PresetGallery({ onPresetSelect }: PresetGalleryProps) {
     if (preset.backgroundNoise !== undefined) {
       setBackgroundNoise(preset.backgroundNoise);
     }
+    if (preset.perspective3D !== undefined) {
+      setPerspective3D(preset.perspective3D);
+    }
     onPresetSelect?.(preset);
   }, [
     setAspectRatio,
@@ -101,6 +105,7 @@ export function PresetGallery({ onPresetSelect }: PresetGalleryProps) {
     setImageScale,
     setImageBorder,
     setImageShadow,
+    setPerspective3D,
     onPresetSelect,
   ]);
 

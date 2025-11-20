@@ -38,6 +38,7 @@ export function PresetSelector() {
     setImageScale,
     setImageBorder,
     setImageShadow,
+    setPerspective3D,
   } = useImageStore();
 
   const [open, setOpen] = React.useState(false);
@@ -90,6 +91,10 @@ export function PresetSelector() {
     if (preset.backgroundNoise !== undefined) {
       setBackgroundNoise(preset.backgroundNoise);
     }
+    // Apply 3D transform if specified in preset
+    if (preset.perspective3D !== undefined) {
+      setPerspective3D(preset.perspective3D);
+    }
     
     // Close the popover after applying
     setOpen(false);
@@ -107,6 +112,7 @@ export function PresetSelector() {
     setImageScale,
     setImageBorder,
     setImageShadow,
+    setPerspective3D,
   ]);
 
   return (

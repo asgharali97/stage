@@ -145,7 +145,9 @@ export function EditorStoreSync() {
       editorStore.shadow.color !== shadowColor ||
       editorStore.shadow.elevation !== elevation ||
       editorStore.shadow.side !== side ||
-      editorStore.shadow.intensity !== intensity
+      editorStore.shadow.intensity !== intensity ||
+      editorStore.shadow.offsetX !== offsetX ||
+      editorStore.shadow.offsetY !== offsetY
     ) {
       editorStore.setShadow({
         enabled: shadow.enabled,
@@ -154,6 +156,8 @@ export function EditorStoreSync() {
         elevation,
         side,
         intensity,
+        offsetX,
+        offsetY,
       })
     }
 

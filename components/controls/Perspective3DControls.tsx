@@ -43,7 +43,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.98,
+      scale: 1,
     },
   },
   {
@@ -55,7 +55,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.97,
+      scale: 1,
     },
   },
   {
@@ -67,7 +67,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.85,
+      scale: 1,
     },
   },
   {
@@ -79,7 +79,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.87,
+      scale: 1,
     },
   },
   {
@@ -91,7 +91,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: -45,
       translateX: 0,
       translateY: 0,
-      scale: 0.9,
+      scale: 1,
     },
   },
   {
@@ -103,7 +103,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 45,
       translateX: 0,
       translateY: 0,
-      scale: 0.92,
+      scale: 1,
     },
   },
   {
@@ -115,7 +115,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.95,
+      scale: 1,
     },
   },
   {
@@ -127,7 +127,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.93,
+      scale: 1,
     },
   },
   {
@@ -139,7 +139,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 5,
       translateX: 0,
       translateY: 0,
-      scale: 0.88,
+      scale: 1,
     },
   },
   {
@@ -151,7 +151,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: -5,
       translateX: 0,
       translateY: 0,
-      scale: 0.89,
+      scale: 1,
     },
   },
   {
@@ -163,7 +163,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: -5,
       translateX: 0,
       translateY: 0,
-      scale: 0.91,
+      scale: 1,
     },
   },
   {
@@ -175,7 +175,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 5,
       translateX: 0,
       translateY: 0,
-      scale: 0.9,
+      scale: 1,
     },
   },
   {
@@ -187,7 +187,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.95,
+      scale: 1,
     },
   },
   {
@@ -199,7 +199,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 0,
       translateX: 0,
       translateY: 0,
-      scale: 0.98,
+      scale: 1,
     },
   },
   {
@@ -211,7 +211,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: -15,
       translateX: 0,
       translateY: 0,
-      scale: 0.9,
+      scale: 1,
     },
   },
   {
@@ -223,7 +223,7 @@ const PRESETS: TransformPreset[] = [
       rotateZ: 15,
       translateX: 0,
       translateY: 0,
-      scale: 0.95,
+      scale: 1,
     },
   },
 ];
@@ -295,7 +295,7 @@ export function Perspective3DControls() {
         </Button>
       </div>
 
-      <div className="flex overflow-x-auto scroll-m-0 space-x-3 p-1.5 -mx-1.5">
+      <div className="grid grid-cols-2 gap-2 overflow-y-auto scroll-m-0 p-1 max-h-64">
         {PRESETS.map((preset, index) => {
           const isSelected = selectedPresetIndex === index;
           return (
@@ -303,14 +303,14 @@ export function Perspective3DControls() {
               key={preset.name}
               onClick={() => applyPreset(preset, index)}
               className={cn(
-                'flex items-center justify-center bg-[rgb(192,192,192)] shrink-0 w-16 h-16 rounded-sm overflow-hidden transition-all cursor-pointer',
+                'flex items-center justify-center bg-[rgb(192,192,192)] w-full aspect-square rounded-sm overflow-hidden transition-all cursor-pointer',
                 'hover:opacity-80 active:scale-95',
                 isSelected && 'border-2 border-gray-800 dark:border-gray-300'
               )}
               style={getPerspectiveStyle(preset)}
             >
               <div
-                className="w-10 h-10 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.25)]"
+                className="w-16 h-16 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.25)]"
                 style={getTransformStyle(preset)}
               />
             </button>
@@ -395,19 +395,6 @@ export function Perspective3DControls() {
             step={0.5}
             label="Translate Y"
             valueDisplay={`${perspective3D.translateY}%`}
-          />
-        </div>
-
-        {/* Scale */}
-        <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
-          <Slider
-            value={[perspective3D.scale]}
-            onValueChange={(value) => setPerspective3D({ scale: value[0] })}
-            min={0.5}
-            max={1.5}
-            step={0.01}
-            label="Scale"
-            valueDisplay={perspective3D.scale.toFixed(2)}
           />
         </div>
       </div>

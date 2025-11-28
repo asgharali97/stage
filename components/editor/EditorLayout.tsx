@@ -11,11 +11,16 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Settings } from "lucide-react";
+import { useAutosaveDraft } from '@/hooks/useAutosaveDraft';
+import { MobileBanner } from "./MobileBanner";
 
 function EditorMain() {
   const isMobile = useIsMobile();
   const [leftPanelOpen, setLeftPanelOpen] = React.useState(false);
   const [rightPanelOpen, setRightPanelOpen] = React.useState(false);
+
+  // enable autosave
+  useAutosaveDraft();
 
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -27,6 +32,9 @@ function EditorMain() {
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
       <EditorStoreSync />
+      
+      {/* Mobile Banner */}
+      <MobileBanner />
       
       {/* Mobile Header */}
       {isMobile && (

@@ -146,10 +146,11 @@ export function MainImageLayer({
           height={imageScaledH}
           opacity={has3DTransform ? 0 : imageOpacity}
           cornerRadius={
-            showFrame && frame.type === 'window'
+            frame.type === 'macos-light' ||
+            frame.type === 'macos-dark' ||
+            frame.type === 'windows-light' ||
+            frame.type === 'windows-dark'
               ? [0, 0, screenshot.radius, screenshot.radius]
-              : showFrame && frame.type === 'ruler'
-              ? screenshot.radius * 0.8
               : screenshot.radius
           }
           imageSmoothingEnabled={false}

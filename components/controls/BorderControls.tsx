@@ -31,6 +31,7 @@ function FramePreview({
   return (
     <div className="flex flex-col items-center gap-2">
       <button
+        type="button"
         onClick={onSelect}
         aria-selected={selected}
         className="flex h-14 w-full cursor-pointer items-center justify-center rounded-lg border-2 border-border/50 bg-secondary transition-colors duration-200 aria-selected:border-primary hover:bg-secondary/80 hover:border-border"
